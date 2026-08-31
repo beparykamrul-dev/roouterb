@@ -6,7 +6,9 @@ RUN CGO_ENABLED=0 go build -trimpath -ldflags='-s -w' -o /out/routerb ./cmd/rout
 
 FROM alpine:3.22
 RUN adduser -D -H -u 10001 routerb
+WORKDIR /app
 COPY --from=build /out/routerb /usr/local/bin/routerb
+COPY --from=build /src/web /app/web
 USER 10001
 EXPOSE 8080
 ENTRYPOINT ["/usr/local/bin/routerb"]
