@@ -1,0 +1,16 @@
+version: 1
+control_plane:
+  domain: cloud.familytimenet.com
+  api_prefix: /api/v1
+protocols:
+  amneziawg: {enabled: true, mode: managed}
+  wireguard: {enabled: true, mode: managed}
+  xray: {enabled: true, mode: managed}
+  shadowsocks: {enabled: true, mode: managed}
+  hysteria2: {enabled: true, mode: managed}
+  openvpn: {enabled: true, mode: managed}
+  gre: {enabled: true, mode: managed}
+  ipsec: {enabled: true, mode: managed}
+security:
+  tls: true
+  require_authentication: true
