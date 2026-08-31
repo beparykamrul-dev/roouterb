@@ -15,8 +15,11 @@ func main(){
  addr:=os.Getenv("ROUTERB_ADDR"); if addr=="" {addr=":8080"}
  mux:=http.NewServeMux()
  mux.HandleFunc("/health",func(w http.ResponseWriter,r *http.Request){jsonOK(w,map[string]any{"status":"ok","service":"routerb","time":time.Now().UTC()})})
+ mux.HandleFunc("/healthz",func(w http.ResponseWriter,r *http.Request){jsonOK(w,map[string]string{"status":"ok"})})
  mux.HandleFunc("/api/v1/protocols",func(w http.ResponseWriter,r *http.Request){jsonOK(w,protocols)})
+ mux.HandleFunc("/api/v1/node",func(w http.ResponseWriter,r *http.Request){jsonOK(w,map[string]any{"name":hostname(),"domain":os.Getenv("ROUTERB_DOMAIN"),"service":"routerb"})})
  mux.HandleFunc("/api/v1/info",func(w http.ResponseWriter,r *http.Request){jsonOK(w,map[string]any{"service":"FTN RouterB","version":"1.0.0","control_plane":"cloud.familytimenet.com","protocols":len(protocols)})})
- mux.HandleFunc("/",func(w http.ResponseWriter,r *http.Request){http.NotFound(w,r)})
+ mux.Handle("/",http.FileServer(http.Dir("./web")))
  log.Printf("RouterB listening on %s",addr); log.Fatal(http.ListenAndServe(addr,mux))
 }
+func hostname() string { h,e:=os.Hostname(); if e!=nil || h=="" {return "routerb-node"}; return h }
