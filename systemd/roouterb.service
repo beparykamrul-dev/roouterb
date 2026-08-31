@@ -1,0 +1,21 @@
+[Unit]
+Description=FTN RouterB Multi-Protocol Control Plane
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/roouterb
+ExecStart=/opt/roouterb/bin/roouterb
+Restart=on-failure
+RestartSec=3
+Environment=ROUTERB_ADDR=127.0.0.1:8080
+Environment=ROUTERB_DOMAIN=cloud.familytimenet.com
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/roouterb
+
+[Install]
+WantedBy=multi-user.target
