@@ -1,0 +1,17 @@
+name: RouterB CI
+on:
+  push:
+    branches: [main, production, dev]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+      - run: gofmt -w $(find cmd -name '*.go')
+      - run: go test ./...
+      - run: go build ./cmd/routerb
