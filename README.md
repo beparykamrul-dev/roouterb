@@ -1,33 +1,41 @@
 # FTN RouterB
 
-Multi-protocol router/node control-plane foundation for Family Time Network.
+Multi-protocol router/node control-plane service for Family Time Network.
 
-## Included protocols
+## Managed protocol families
 
-- AmneziaWG
-- WireGuard
-- Xray
-- Shadowsocks
-- Hysteria2
-- OpenVPN
-- GRE
-- IPsec
+AmneziaWG, WireGuard, Xray, Shadowsocks, Hysteria2, OpenVPN, GRE and IPsec.
 
-## Control plane
+RouterB is the node/edge service. Aether-Core is the orchestration/control-plane layer. The configured cloud endpoint is `cloud.familytimenet.com`.
 
-`cloud.familytimenet.com` → Nginx → RouterB API → protocol/node adapters.
+## Repository layout
 
-The current release provides a lightweight Go API, health endpoint and web control panel. Protocol adapters are intentionally separated from the control plane so implementations can be added independently.
+- `cmd/routerb` — Go RouterB service
+- `cmd/router` — existing router entrypoint
+- `web` — web console
+- `android` — Android client/API contract
+- `config` — protocol configuration
+- `deploy` — Docker/Nginx deployment
+- `systemd` — hardened service unit
+- `scripts` — installation helpers
+- `docs` — architecture documentation
 
-## Build
+## Local build
 
 ```bash
-go build -o roouterb ./cmd/router
-sudo ./scripts/install.sh
+go test ./...
+go build -trimpath -o roouterb ./cmd/routerb
+ROUTERB_ADDR=127.0.0.1:8080 ./roouterb
 ```
 
 ## API
 
+- `GET /health`
 - `GET /healthz`
+- `GET /api/v1/info`
 - `GET /api/v1/node`
 - `GET /api/v1/protocols`
+
+## Deployment
+
+Docker and systemd definitions are included. Put TLS/authentication at the production reverse proxy and do not commit credentials, private keys, or protocol secrets.
